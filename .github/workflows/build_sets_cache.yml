@@ -22,7 +22,9 @@ jobs:
       - run: |
               echo "SETS_CF_CLEARANCE=${{ secrets.SETS_CF_CLEARANCE }}
               SETS_USER_AGENT=${{ secrets.SETS_USER_AGENT }}
-              " > ~/.config/.env
+              " > .config/.env
+      - run: mkdir -p .config/images
+      - run: mkdir -p .config/ship_images
       - run: python3 main.py --build-cache
       - uses: peter-evans/create-pull-request@v8
         with:
