@@ -21,10 +21,10 @@ jobs:
         with:
           path: '.config'
       - run: |
-          cat << EOF > .config/.env
-          SETS_CF_CLEARANCE=${{ secrets.SETS_CF_CLEARANCE }}
-          SETS_USER_AGENT=${{ secrets.SETS_USER_AGENT }}
-          EOF
+          python3 -c "import os; file = open('.config/.env', 'w'); file.write(f'''SETS_CF_CLEARANCE={os.environ['SETS_CF_CLEARANCE']}\nSETS_USER_AGENT={os.environ['SETS_USER_AGENT']}\n'''); file.close()"
+        env:
+          SETS_CF_CLEARANCE: ${{ secrets.SETS_CF_CLEARANCE }}
+          SETS_USER_AGENT: ${{ secrets.SETS_USER_AGENT }}
       - run: mkdir -p .config/images
       - run: mkdir -p .config/ship_images
       - run: python3 main.py --build-cache
