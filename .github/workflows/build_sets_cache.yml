@@ -1,0 +1,29 @@
+name: Build SETS Cache
+
+on: workflow_dispatch
+
+jobs:
+  build_cache:
+    name: Build Cache
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: STOCD/SETS
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: python3 -m pip install -e .
+      - uses: actions/checkout@v5
+        with:
+          path: '.config'
+      - run: |
+              echo "SETS_CF_CLEARANCE=${{ secrets.SETS_CF_CLEARANCE }}
+              SETS_USER_AGENT=${{ secrets.SETS_USER_AGENT }}
+              " > ~/.config/.env
+      - run: python3 main.py --build-cache
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          path: '.config'
